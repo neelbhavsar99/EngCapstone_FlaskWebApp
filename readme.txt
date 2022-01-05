@@ -1,3 +1,8 @@
+Flask Web Application for Computer Vision
+
+
+
+
 // To setup, run application
     1) Open VSCode, create a virtual environment
     2) Open built-in terminal, install the libraries using requirements.txt
