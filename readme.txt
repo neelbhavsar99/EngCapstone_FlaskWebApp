@@ -1,14 +1,17 @@
-Flask Web Application for Computer Vision
+## Flask Web Application for Computer Vision
 
+## Tools and Technologies 
+* Web Framework used: Flask 
+* Machine Learning: OpenCv
+* HW: Raspberry Pi
 
-
-
+### Project Setup
 // To setup, run application
     1) Open VSCode, create a virtual environment
     2) Open built-in terminal, install the libraries using requirements.txt
     3) python3 app.py (it will start the development server)
 
-
+### ML Setup
 Harcascades -> used for facial detection (eyes and face)
 // https://medium.com/analytics-vidhya/haar-cascades-explained-38210e57970d
 
