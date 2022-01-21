@@ -1,4 +1,4 @@
-# Caffe-SSD-Object-Detection 
+# Caffe-SSD-Object-Detection - Camera Rig
 Object Detection using Single Shot MultiBox Detector with Caffe MobileNet on OpenCV in Python.
 
 ## SSD Framework
