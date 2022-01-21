@@ -14,7 +14,7 @@ Caffe is a deep learning framework developed by the Berkely AI Research and Comm
 K-40 GPU
 
 ## Run code
-`python detectDNN.py -p Caffe/SSD_MobileNet_prototxt -m Caffe/SSD_MobileNet.caffemodel`
+`python detectDNN.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel`
 
 ## Article
 [Medium](https://medium.com/analytics-vidhya/ssd-object-detection-in-real-time-deep-learning-and-caffe-f41e40eea968)
