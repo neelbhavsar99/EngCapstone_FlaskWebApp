@@ -46,7 +46,8 @@ nn = cv2.dnn.readNetFromCaffe(args['prototxt'], args['model'])
 
 #Initialize Video Stream
 print('[Status] Starting Video Stream...')
-vs = VideoStream(src=1).start()
+
+vs = VideoStream(src=0).start()
 time.sleep(2.0)
 fps = FPS().start()
 
