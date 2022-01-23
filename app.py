@@ -121,8 +121,6 @@ def generate_frame():
     cv2.destroyAllWindows()
     vs.stop()
 
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -134,6 +132,12 @@ def video():
     return Response(generate_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/pi_output', methods=['GET'])
+def pi_output():
+    return """
+      {"direction" : "left",
+      "mode": "Free tracking"}
+      """
 
 if __name__ == "__main__":
     app.run(debug=True)
