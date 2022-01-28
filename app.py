@@ -9,6 +9,7 @@ import time
 import imutils
 import argparse
 import numpy as np
+import pathlib, os
 
 from imutils.video import FPS
 from imutils.video import VideoStream
@@ -16,26 +17,29 @@ from imutils.video import VideoStream
 app = Flask(__name__)
 camera = cv2.VideoCapture(0)
 
+prototxtPath = os.path.dirname(os.path.abspath('app.py')) + '/server/Caffe/SSD_MobileNet_prototxt.txt'
+modelPath = os.path.dirname(os.path.abspath('app.py')) + '/server/Caffe/SSD_MobileNet.caffemodel'
+
+print("prototxtPath: " + str(prototxtPath))
+
 def generate_frame():
     
     ap = argparse.ArgumentParser()
-    ap.add_argument(
-        "-p",
-        "--prototxt",
-        required=True,
-        help=
-        '/server/Caffe/SSD_MobileNet_prototxt.txt'
-    )
-    ap.add_argument(
-        "-m",
-        "--model",
-        required=True,
-        help=
-        '/server/Caffe/SSD_MobileNet.caffemodel'
-    )
+    # ap.add_argument(
+    #     "-p",
+    #     "--prototxt",
+    #     required=True,
+    #     help= prototxtPath
+    # )
+    # ap.add_argument(
+    #     "-m",
+    #     "--model",
+    #     required=True,
+    #     help= modelPath
+    # )
     ap.add_argument("-c", "--confidence", type=float, default=0.7)
     args = vars(ap.parse_args())
-
+    print("args: " + str(args))
     #Initialize Objects and corresponding colors which the model can detect
     labels = [
         "background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus",
@@ -46,7 +50,9 @@ def generate_frame():
 
     #Loading Caffe Model
     print('[Status] Loading Model...')
-    nn = cv2.dnn.readNetFromCaffe(args['prototxt'], args['model'])
+    # nn = cv2.dnn.readNetFromCaffe(args[prototxtPath], args[modelPath])
+    nn = cv2.dnn.readNetFromCaffe(prototxtPath, modelPath)
+    
     #python3 detectDNN.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
 
     #Initialize Video Stream
