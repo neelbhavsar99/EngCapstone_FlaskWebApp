@@ -95,6 +95,8 @@ def generate_frame():
                 #Extracting bounding box coordinates
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
+                print("StartX: " + startX + "\tEndX: " + endX)
+                print("StartY: " + startY + "\tEndY: " + endY)
 
                 #Drawing the prediction and bounding box
                 label = "{}: {:.2f}%".format(labels[idx], confidence * 100)
