@@ -1,15 +1,11 @@
-#GITHUB LINK: https://github.com/krishnaik06/Flask-Web-Framework/tree/main/Tutorial%207%20opencv
-## PYTHON APP: python3 app.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
-## PYTHON APP: python3 detectDNN.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
-## python3 real_time_object_detection.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
-
 from flask import Flask, render_template, Response
-import cv2  #Open source computer vision library
+import cv2 
 import time
 import imutils
 import argparse
 import numpy as np
-import pathlib, os
+import pathlib
+import os
 
 from imutils.video import FPS
 from imutils.video import VideoStream
@@ -20,26 +16,15 @@ camera = cv2.VideoCapture(0)
 prototxtPath = os.path.dirname(os.path.abspath('app.py')) + '/server/Caffe/SSD_MobileNet_prototxt.txt'
 modelPath = os.path.dirname(os.path.abspath('app.py')) + '/server/Caffe/SSD_MobileNet.caffemodel'
 
-print("prototxtPath: " + str(prototxtPath))
+#print("prototxtPath: " + str(prototxtPath))
 
 def generate_frame():
     
     ap = argparse.ArgumentParser()
-    # ap.add_argument(
-    #     "-p",
-    #     "--prototxt",
-    #     required=True,
-    #     help= prototxtPath
-    # )
-    # ap.add_argument(
-    #     "-m",
-    #     "--model",
-    #     required=True,
-    #     help= modelPath
-    # )
     ap.add_argument("-c", "--confidence", type=float, default=0.7)
     args = vars(ap.parse_args())
     print("args: " + str(args))
+    
     #Initialize Objects and corresponding colors which the model can detect
     labels = [
         "background", "aeroplane", "bicycle", "bird", "boat", "bottle", "bus",
@@ -53,8 +38,6 @@ def generate_frame():
     # nn = cv2.dnn.readNetFromCaffe(args[prototxtPath], args[modelPath])
     nn = cv2.dnn.readNetFromCaffe(prototxtPath, modelPath)
     
-    #python3 detectDNN.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
-
     #Initialize Video Stream
     print('[Status] Starting Video Stream...')
 
@@ -95,8 +78,8 @@ def generate_frame():
                 #Extracting bounding box coordinates
                 box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
                 (startX, startY, endX, endY) = box.astype("int")
-                print("StartX: " + startX + "\tEndX: " + endX)
-                print("StartY: " + startY + "\tEndY: " + endY)
+                print("StartX: " + str(startX) + "\tEndX: " + str(endX))
+                print("StartY: " + str(startY) + "\tEndY: " + str(endY))
 
                 #Drawing the prediction and bounding box
                 label = "{}: {:.2f}%".format(labels[idx], confidence * 100)
@@ -133,7 +116,6 @@ def generate_frame():
 def index():
     return render_template('index.html')
 
-
 @app.route('/video')
 def video():
     #Response will call some function
@@ -148,5 +130,4 @@ def pi_output():
       """
 
 if __name__ == "__main__":
-    app.run(debug=True)
-    #app.run()
+    app.run(host='0.0.0.0', debug=False)
