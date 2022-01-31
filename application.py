@@ -114,18 +114,15 @@ def generate_frame():
     cv2.destroyAllWindows()
     vs.stop()
 
-
 @application.route('/')
 def index():
     return render_template('index.html')
-
 
 @application.route('/video')
 def video():
     # Response will call some function
     return Response(generate_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 @application.route('/pi_output', methods=['GET'])
 def pi_output():
@@ -137,4 +134,5 @@ def pi_output():
 
 if __name__ == "__main__":
     # application.run(host='0.0.0.0', debug=False)
-    application.run(port='8081', debug=False)
+    application.run(port=8081, debug=True, use_reloader=False)
+
