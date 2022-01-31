@@ -10,11 +10,10 @@ Single Shot MultiBox Detectors can be divided into two parts:
  This implementation makes use of the MobileNet deep learning CNN architecture as the base network. 
 
 ## Caffe Framework
-Caffe is a deep learning framework developed by the Berkely AI Research and Community Contributors. Caffe [repo](https://github.com/BVLC/caffe). It is a much faster way of training images with over 6 million images per day using an Nvidia 
-K-40 GPU
+Caffe is a deep learning framework developed by the Berkely AI Research and Community Contributors. Caffe [repo](https://github.com/BVLC/caffe). It is a much faster way of training images with over 6 million images per day using an Nvidia K-40 GPU
 
 ## Run code
-`python app.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel`
+`python app.py`
 
 ## Article
 [Medium](https://medium.com/analytics-vidhya/ssd-object-detection-in-real-time-deep-learning-and-caffe-f41e40eea968)
