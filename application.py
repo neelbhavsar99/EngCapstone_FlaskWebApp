@@ -1,23 +1,22 @@
 from flask import Flask, render_template, Response
 from imutils.video import FPS
-from imutils.video import VideoStream
 import cv2
-import time
 import imutils
 import argparse
 import numpy as np
 import os
 
+template_dir = os.path.abspath('templates')
+static_dir = os.path.abspath('static')
+application = Flask(__name__, template_folder=template_dir,
+                    static_folder=static_dir)
 
-application = Flask(__name__)
 camera = cv2.VideoCapture(0)
 
 prototxtPath = os.path.dirname(os.path.abspath(
     'application.py')) + '/server/Caffe/SSD_MobileNet_prototxt.txt'
 modelPath = os.path.dirname(os.path.abspath(
     'application.py')) + '/server/Caffe/SSD_MobileNet.caffemodel'
-
-#print("prototxtPath: " + str(prototxtPath))
 
 
 def generate_frame():
@@ -114,15 +113,18 @@ def generate_frame():
     cv2.destroyAllWindows()
     vs.stop()
 
+
 @application.route('/')
 def index():
     return render_template('index.html')
+
 
 @application.route('/video')
 def video():
     # Response will call some function
     return Response(generate_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 @application.route('/pi_output', methods=['GET'])
 def pi_output():
@@ -134,7 +136,4 @@ def pi_output():
 
 if __name__ == "__main__":
     # application.run(host='0.0.0.0', debug=False)
-    #application.run(port=8081, debug=True, use_reloader=False)
-    application.debug = True
-    application.run()
-
+    application.run(host='0.0.0.0', port=8081, debug=True, use_reloader=False)
