@@ -134,5 +134,7 @@ def pi_output():
 
 if __name__ == "__main__":
     # application.run(host='0.0.0.0', debug=False)
-    application.run(port=8081, debug=True, use_reloader=False)
+    #application.run(port=8081, debug=True, use_reloader=False)
+    application.debug = True
+    application.run()
 
