@@ -1,8 +1,6 @@
-#GITHUB LINK: https://github.com/krishnaik06/Flask-Web-Framework/tree/main/Tutorial%207%20opencv
-## PYTHON APP: python3 app.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
-## PYTHON APP: python3 detectDNN.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
-## python3 real_time_object_detection.py -p Caffe/SSD_MobileNet_prototxt.txt -m Caffe/SSD_MobileNet.caffemodel
+# PYTHON APP: python3 application.py
 
+from statistics import mode
 import cv2
 import imutils
 import argparse
@@ -35,9 +33,9 @@ ARG_PARSE.add_argument(
     help="Model Path"
 )
 ARG_PARSE.add_argument(
-    "-c", 
-    "--confidence", 
-    type=float, 
+    "-c",
+    "--confidence",
+    type=float,
     default=0.7,
     help="Set the confidence"
 )
@@ -46,21 +44,19 @@ args = ARG_PARSE.parse_args()
 
 camera = cv2.VideoCapture(0)
 
-print("Prototxt Path: " + str(args.prototxt))
-print("Model Path: " + str(args.model))
-
 # Loading Caffe Model
 print('[Status] Loading Model...')
 nn = cv2.dnn.readNetFromCaffe(args.prototxt, args.model)
 
 latest_prediction = None
 
+
 def get_predictions(frame):
     predictions = []
-    
+
     # Converting Frame to Blob
     blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 0.007843,
-                                (300, 300), 127.5)
+                                 (300, 300), 127.5)
 
     # Passing Blob through network to detect and predict
     nn.setInput(blob)
@@ -79,43 +75,50 @@ def get_predictions(frame):
             h, w = frame.shape[:2]
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             # Appending to predictions
-            predictions.append({"ID": idx, "Confidence": confidence * 100, "Box": box.astype("int")})
+            predictions.append(
+                {"ID": idx, "Confidence": confidence * 100, "Box": box.astype("int")})
 
-    return sorted(predictions, key = lambda i: i['Confidence'])
+    return sorted(predictions, key=lambda i: i['Confidence'])
+
 
 def generate_frame():
     global latest_prediction
-    #Initialize Video Stream
+    # Initialize Video Stream
     print('[Status] Starting Video Stream...')
     fps = FPS().start()
 
     # Loop Video Stream
     while True:
+       
         success, frame = camera.read()  # Read camera frame continuosly
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
-        
+
         predictions = get_predictions(frame)
-        
+
         if predictions:
             latest_prediction = predictions[0]
-            
+
             # Computing the (x,y) - coordinates of the bounding box
             startX, startY, endX, endY = latest_prediction["Box"].astype("int")
             # Drawing the prediction and bounding box
-            label = "{}: {:.2f}%".format(LABELS[latest_prediction["ID"]].capitalize(), latest_prediction["Confidence"])
-            
-            cv2.rectangle(frame, (startX, startY), (endX, endY), COLORS[latest_prediction["ID"]], 2)
-            y = startY - 15 if startY - 15 > 15 else startY + 15
-            cv2.putText(frame, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX,0.5, COLORS[latest_prediction["ID"]], 2)
+            label = "{}: {:.2f}%".format(
+                LABELS[latest_prediction["ID"]].capitalize(), latest_prediction["Confidence"])
 
-        #encode frame into multiple pics
+            cv2.rectangle(frame, (startX, startY), (endX, endY),
+                          COLORS[latest_prediction["ID"]], 2)
+            y = startY - 15 if startY - 15 > 15 else startY + 15
+            cv2.putText(frame, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5, COLORS[latest_prediction["ID"]], 2)
+
+        # encode frame into multiple pics
         ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()  #computer vision requires this
-        frame = (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        
+        frame = buffer.tobytes()  # computer vision requires this
+        frame = (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' +
+                 frame + b'\r\n')
+
         yield frame
-        
+
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
             break
@@ -129,29 +132,36 @@ def generate_frame():
 
     cv2.destroyAllWindows()
 
-@application.route('/')
+# Tracking mode default -> When list is empty otherwise "Free Scanning Mode"
+@application.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == 'POST':
+        print(request.form.getlist('mode'))
     return render_template('index.html')
+
 
 @application.route('/video')
 def video():
     return Response(generate_frame(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
 @application.route('/move')
 def direction():
     startX, startY, endX, endY = latest_prediction["Box"].astype("int")
-    
+
     if LABELS[latest_prediction["ID"]] == "person" and startX > 40 and endX < 360:
         mode = "stop"
         direction = "none"
-    elif LABELS[latest_prediction["ID"]]== "person" and startX < 40:                        
+    elif LABELS[latest_prediction["ID"]] == "person" and startX < 40:
         mode = "track"
         direction = "left"
     elif LABELS[latest_prediction["ID"]] == "person" and endX > 360:
         mode = "track"
         direction = "right"
-    
+
     return jsonify({"Mode": mode, "Direction": direction})
+
 
 if __name__ == "__main__":
     application.run(host="0.0.0.0", debug=True)
+

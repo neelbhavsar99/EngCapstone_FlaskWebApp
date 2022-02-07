@@ -175,21 +175,6 @@
 .u-section-4 .u-text-2 {
 	margin: 30px auto 0;
 }
-
-.u-section-4 .u-btn-1 {
-	background-image: none;
-	text-transform: uppercase;
-	font-weight: 700;
-	margin: 40px auto 0 323px;
-}
-
-.u-section-4 .u-btn-2 {
-	background-image: none;
-	text-transform: uppercase;
-	font-weight: 700;
-	margin: -45px 346px 60px auto;
-}
-
 .u-section-5 .u-sheet-1 {
 	min-height: 500px;
 }
@@ -1069,4 +1054,87 @@ p:not(.u-text-variant) {
 
 html {
 	font-size: 16px;
+}
+
+/* Left Button */
+#buttonboxbackleft {
+	display: inline-block;
+    width: 150px;
+    height: 40px;
+    background-color: darkblue;
+    border-radius: 5px;
+	margin:auto
+}
+
+#buttonboxbackleft:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -17px;
+    border-style: solid;
+    border-width: 20px 20px 20px 0;
+    border-color: transparent darkblue transparent transparent;
+}
+
+#buttonboxbackleft > a {
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    font: bold 18px/40px Sans-Serif;
+}
+
+#buttonboxbackleft:hover {
+    background-color: lightblue;
+}
+
+#buttonboxbackleft:hover:before {
+    border-right-color: lightblue;
+}
+
+#buttonboxbackleft .center {
+	margin: auto;
+	width: 50%;
+}
+
+  
+  /* Right Button */
+
+#buttonboxbackright {
+	display: inline-block;
+	width: 150px;
+	height: 40px;
+	background-color: darkblue;
+	border-radius: 5px;
+	margin:auto
+}
+
+#buttonboxbackright:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -17px;
+    border-style: solid;
+    border-width: 20px 0px 20px 20px;
+    border-color: transparent transparent transparent darkblue;
+}
+
+#buttonboxbackright > a {
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    font: bold 18px/40px Sans-Serif;
+}
+
+#buttonboxbackright:hover {
+    background-color: lightblue;
+}
+
+#buttonboxbackright:hover:before {
+    border-left-color: lightblue;
+}
+
+#buttonboxbackright .center {
+	margin: auto;
+	width: 50%;
+
 }
