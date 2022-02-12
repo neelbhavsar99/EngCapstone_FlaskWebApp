@@ -1,14 +1,13 @@
 # PYTHON APP: python3 application.py
-from doctest import testmod
-from statistics import mode
+from imutils.video import FPS
+from flask import Flask, Response, make_response, render_template, request, jsonify
+from constants import LABELS, COLORS
 import cv2
 import imutils
 import argparse
 import numpy as np
 import os
-from imutils.video import FPS
-from flask import Flask, Response, make_response, render_template, request, jsonify
-from constants import LABELS, COLORS
+
 
 template_dir = os.path.abspath('templates')
 static_dir = os.path.abspath('static')
@@ -130,19 +129,29 @@ def generate_frame():
 
     cv2.destroyAllWindows()
 
-# Tracking mode default -> When list is empty otherwise "Free Scanning Mode"
+
+@application.before_first_request
+def OnceAndOnlyOnce():
+    global selectedMode, selectedDirection
+    selectedMode = "Tracking Mode"
+    selectedDirection = "Stop"
+
+
 @application.route('/', methods=['GET', 'POST'])
 def index():
-    global testMode
-    testMode = "Tracking Mode"
+
     if request.method == "POST":
+        global selectedMode, selectedDirection
+
         val = request.json.get("mode")
+        selectedDirection = request.json.get("direction")
+
         if val == 1:
-            testMode = "Free Scanning Mode"
-        else:
-            testMode = "Tracking Mode"
-        print(f"in POST: {testMode}")
-        return jsonify({"data": {"val": val}})
+            selectedMode = "Free Scanning Mode"
+        elif val == 0:
+            selectedMode = "Tracking Mode"
+
+        # return jsonify({"data": {"val": val}})
     return render_template("index.html")
 
 
@@ -154,10 +163,9 @@ def video():
 @application.route('/move')
 def direction():
     startX, startY, endX, endY = latest_prediction["Box"].astype("int")
-    print(f"In Direction: {testMode}")
 
-    if testMode == "Free Scanning Mode":
-        return jsonify({"Mode": testMode, "Direction": None})
+    if selectedMode == "Free Scanning Mode":
+        return jsonify({"Mode": selectedMode, "Direction": selectedDirection})
     else:
         if LABELS[latest_prediction["ID"]] == "person" and startX > 40 and endX < 360:
             direction = "none"
@@ -167,7 +175,7 @@ def direction():
             direction = "right"
         else:
             direction = ""
-        return jsonify({"Mode": testMode, "Direction": direction})
+        return jsonify({"Mode": selectedMode, "Direction": direction})
 
 
 if __name__ == "__main__":

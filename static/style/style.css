@@ -1058,6 +1058,7 @@ html {
 
 /* Left Button */
 #buttonboxbackleft {
+	cursor: pointer;
 	display: inline-block;
     width: 150px;
     height: 40px;
@@ -1100,6 +1101,7 @@ html {
   /* Right Button */
 
 #buttonboxbackright {
+	cursor: pointer;
 	display: inline-block;
 	width: 150px;
 	height: 40px;
@@ -1138,3 +1140,51 @@ html {
 	width: 50%;
 
 }
+
+  /* Stop Button */
+
+#buttonboxbackstop {
+	cursor: pointer;
+	display: inline-block;
+	width: 150px;
+	height: 40px;
+	background-color: darkblue;
+	border-radius: 5px;
+	margin:auto
+}
+
+#buttonboxbackstop:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -17px;
+    border-style: solid;
+    /*border-width: 20px 0px 20px 20px;
+    border-color: transparent transparent transparent transparent;*/
+}
+
+#buttonboxbackstop > a {
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    font: bold 18px/40px Sans-Serif;
+}
+
+#buttonboxbackstop:hover {
+    background-color: lightblue;
+}
+
+#buttonboxbackstop:hover:before {
+    border-left-color: lightblue;
+}
+
+#buttonboxbackstop .center {
+	margin: auto;
+	width: 50%;
+
+}
+
+.ordered-list-center {
+	text-align: center;
+	list-style-position: inside;
+  }

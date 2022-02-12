@@ -8,6 +8,8 @@
     defer=""></script>
   <!--<script class="u-script" type="text/javascript" src="{{ url_for('static', filename='scripts/localIP.js') }}"
     defer=""></script>-->
+  <script class="u-script" type="text/javascript" src="{{ url_for('static', filename='scripts/DirectionButtons.js') }}"
+    defer=""></script>
   <link id="u-theme-google-font" rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
 </head>
@@ -145,11 +147,12 @@
       <div>
         <img src="{{url_for('video') }}" width="50%" />
       </div>
-      <p class="u-large-text u-text u-text-default u-text-variant u-text-2">Sample text. Lorem ipsum dolor sit amet,
-        consectetur adipiscing elit nullam nunc justo sagittis suscipit ultrices.</p>
+      <p class="u-large-text u-text u-text-default u-text-variant u-text-2">Use buttons below to control Object
+        Detection Camera Rig when in Free Scanning Mode</p>
 
-      <div class="center" id="buttonboxbackleft"><a href="#">LEFT</a></div>
-      <div class="center" id="buttonboxbackright"><a href="#">RIGHT</a></div>
+      <div class="center" id="buttonboxbackleft"><a>LEFT</a></div>
+      <div class="center" id="buttonboxbackstop"><a>STOP</a></div>
+      <div class="center" id="buttonboxbackright"><a>RIGHT</a></div>
       <div>
         <input type="checkbox" />
         <label for="mode"> Free Scanning Mode</label>
@@ -162,10 +165,15 @@
     data-image-height="256" id="sec-24a0">
     <div class="u-clearfix u-sheet u-sheet-1">
       <h2 class="u-text u-text-default u-title u-text-1">Instructions</h2>
-      <p class="u-large-text u-text u-text-default u-text-variant u-text-2">Sample text. Lorem ipsum dolor sit amet,
-        consectetur adipiscing elit nullam nunc justo sagittis suscipit ultrices.</p>
-      <a href="#" class="u-btn u-button-style u-palette-2-base u-btn-1">Read More</a>
-      <a href="#" class="u-btn u-button-style u-palette-2-base u-btn-2">Read More</a>
+      <p class="u-large-text u-text u-text-default u-text-variant u-text-2">Follow the instructions below to use the
+        Object Detection Camera Rig!</p>
+      <ol class="center">
+        <li>Allow Camera access</li>
+        <li>Select mode</li>
+        <li>Move around!</li>
+      </ol>
+      <!-- <a href="#" class="u-btn u-button-style u-palette-2-base u-btn-1">Read More</a>
+      <a href="#" class="u-btn u-button-style u-palette-2-base u-btn-2">Read More</a>-->
     </div>
   </section>
 

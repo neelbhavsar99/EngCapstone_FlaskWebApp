@@ -1,7 +1,8 @@
+var localIp = "http://192.168.2.61:5000/";
 document
     .querySelector("input")
     .addEventListener("click", e => {
-        fetch("http://192.168.2.61:5000/", {
+        fetch(localIp, {
             method: "POST",
             headers: {
                 "Accept": "application/json",
@@ -10,7 +11,7 @@ document
             body: JSON.stringify({
                 mode: Number(e.target.checked)
             })
-        })
+        })/*
             .then(res => {
                 if (!res.ok) {
                     throw Error(res.status);
@@ -23,7 +24,6 @@ document
                 //const res = document.querySelector(".result");
                 //res.innerText = `client got: ${val}`;
             })
-            .catch(err => console.error(err))
+            .catch(err => console.error(err))*/
             ;
-    })
-    ;
+    });
