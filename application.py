@@ -1,5 +1,5 @@
 # PYTHON APP: python3 application.py
-
+from doctest import testmod
 from statistics import mode
 import cv2
 import imutils
@@ -7,9 +7,7 @@ import argparse
 import numpy as np
 import os
 from imutils.video import FPS
-
 from flask import Flask, Response, make_response, render_template, request, jsonify
-
 from constants import LABELS, COLORS
 
 template_dir = os.path.abspath('templates')
@@ -83,13 +81,13 @@ def get_predictions(frame):
 
 def generate_frame():
     global latest_prediction
+
     # Initialize Video Stream
     print('[Status] Starting Video Stream...')
     fps = FPS().start()
 
     # Loop Video Stream
     while True:
-       
         success, frame = camera.read()  # Read camera frame continuosly
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
@@ -135,9 +133,17 @@ def generate_frame():
 # Tracking mode default -> When list is empty otherwise "Free Scanning Mode"
 @application.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        print(request.form.getlist('mode'))
-    return render_template('index.html')
+    global testMode
+    testMode = "Tracking Mode"
+    if request.method == "POST":
+        val = request.json.get("mode")
+        if val == 1:
+            testMode = "Free Scanning Mode"
+        else:
+            testMode = "Tracking Mode"
+        print(f"in POST: {testMode}")
+        return jsonify({"data": {"val": val}})
+    return render_template("index.html")
 
 
 @application.route('/video')
@@ -148,20 +154,21 @@ def video():
 @application.route('/move')
 def direction():
     startX, startY, endX, endY = latest_prediction["Box"].astype("int")
+    print(f"In Direction: {testMode}")
 
-    if LABELS[latest_prediction["ID"]] == "person" and startX > 40 and endX < 360:
-        mode = "stop"
-        direction = "none"
-    elif LABELS[latest_prediction["ID"]] == "person" and startX < 40:
-        mode = "track"
-        direction = "left"
-    elif LABELS[latest_prediction["ID"]] == "person" and endX > 360:
-        mode = "track"
-        direction = "right"
-
-    return jsonify({"Mode": mode, "Direction": direction})
+    if testMode == "Free Scanning Mode":
+        return jsonify({"Mode": testMode, "Direction": None})
+    else:
+        if LABELS[latest_prediction["ID"]] == "person" and startX > 40 and endX < 360:
+            direction = "none"
+        elif LABELS[latest_prediction["ID"]] == "person" and startX < 40:
+            direction = "left"
+        elif LABELS[latest_prediction["ID"]] == "person" and endX > 360:
+            direction = "right"
+        else:
+            direction = ""
+        return jsonify({"Mode": testMode, "Direction": direction})
 
 
 if __name__ == "__main__":
     application.run(host="0.0.0.0", debug=True)
-
