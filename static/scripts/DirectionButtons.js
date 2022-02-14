@@ -1,5 +1,5 @@
 document.getElementById('buttonboxbackleft').addEventListener("click", function leftButton() {
-    fetch(localIp, {
+    fetch("", {
         method: "POST",
         headers: {
             "Accept": "application/json",
@@ -12,7 +12,7 @@ document.getElementById('buttonboxbackleft').addEventListener("click", function 
 });
 
 document.getElementById('buttonboxbackright').addEventListener("click", function rightButton() {
-    fetch(localIp, {
+    fetch("", {
         method: "POST",
         headers: {
             "Accept": "application/json",
@@ -25,7 +25,7 @@ document.getElementById('buttonboxbackright').addEventListener("click", function
 });
 
 document.getElementById('buttonboxbackstop').addEventListener("click", function leftButton() {
-    fetch(localIp, {
+    fetch("", {
         method: "POST",
         headers: {
             "Accept": "application/json",

@@ -1,5 +1,5 @@
 # PYTHON APP: python3 application.py
-from imutils.video import FPS
+from imutils.video import VideoStream
 from flask import Flask, Response, make_response, render_template, request, jsonify
 from constants import LABELS, COLORS
 import cv2
@@ -39,7 +39,8 @@ ARG_PARSE.add_argument(
 
 args = ARG_PARSE.parse_args()
 
-camera = cv2.VideoCapture(0)
+# camera = cv2.VideoCapture(0)
+camera = VideoStream("http://172.20.10.4:8080/video").start()
 
 # Loading Caffe Model
 print('[Status] Loading Model...')
@@ -83,11 +84,12 @@ def generate_frame():
 
     # Initialize Video Stream
     print('[Status] Starting Video Stream...')
-    fps = FPS().start()
 
     # Loop Video Stream
     while True:
-        success, frame = camera.read()  # Read camera frame continuosly
+        # success, frame = camera.read()  # Read camera frame continuosly
+
+        frame = camera.read()
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
 
@@ -120,13 +122,6 @@ def generate_frame():
         if key == ord('q'):
             break
 
-        fps.update()
-
-    fps.stop()
-
-    print("[Info] Elapsed time: {:.2f}".format(fps.elapsed()))
-    print("[Info] Approximate FPS:  {:.2f}".format(fps.fps()))
-
     cv2.destroyAllWindows()
 
 
@@ -139,19 +134,18 @@ def OnceAndOnlyOnce():
 
 @application.route('/', methods=['GET', 'POST'])
 def index():
-
     if request.method == "POST":
         global selectedMode, selectedDirection
 
-        val = request.json.get("mode")
+        modeVal = request.json.get("mode")
         selectedDirection = request.json.get("direction")
 
-        if val == 1:
+        if modeVal == 1:
             selectedMode = "Free Scanning Mode"
-        elif val == 0:
+        elif modeVal == 0:
             selectedMode = "Tracking Mode"
 
-        # return jsonify({"data": {"val": val}})
+        # return jsonify({"data": {"val": modeVal}})
     return render_template("index.html")
 
 

@@ -1,8 +1,7 @@
-var localIp = "http://192.168.2.61:5000/";
 document
     .querySelector("input")
     .addEventListener("click", e => {
-        fetch(localIp, {
+        fetch("", {
             method: "POST",
             headers: {
                 "Accept": "application/json",
