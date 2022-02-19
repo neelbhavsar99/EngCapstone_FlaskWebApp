@@ -6,7 +6,7 @@ document.getElementById('buttonboxbackleft').addEventListener("click", function 
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            direction: "Left"
+            direction: "left"
         })
     })
 });
@@ -19,7 +19,7 @@ document.getElementById('buttonboxbackright').addEventListener("click", function
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            direction: "Right"
+            direction: "right"
         })
     })
 });
@@ -32,7 +32,7 @@ document.getElementById('buttonboxbackstop').addEventListener("click", function 
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            direction: "Stop"
+            direction: "stop"
         })
     })
 });

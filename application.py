@@ -9,10 +9,10 @@ import numpy as np
 import os
 
 
-template_dir = os.path.abspath('templates')
-static_dir = os.path.abspath('static')
-application = Flask(__name__, template_folder=template_dir,
-                    static_folder=static_dir)
+templateDirectory = os.path.abspath('templates')
+staticDirectory = os.path.abspath('static')
+application = Flask(__name__, template_folder=templateDirectory,
+                    static_folder=staticDirectory)
 
 ARG_PARSE = argparse.ArgumentParser()
 ARG_PARSE.add_argument(
@@ -40,7 +40,7 @@ ARG_PARSE.add_argument(
 args = ARG_PARSE.parse_args()
 
 # camera = cv2.VideoCapture(0)
-camera = VideoStream("http://172.20.10.4:8080/video").start()
+camera = VideoStream("http://172.20.10.11:8080/video").start()
 
 # Loading Caffe Model
 print('[Status] Loading Model...')
@@ -88,8 +88,8 @@ def generate_frame():
     # Loop Video Stream
     while True:
         # success, frame = camera.read()  # Read camera frame continuosly
-
         frame = camera.read()
+        
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
 
@@ -173,4 +173,4 @@ def direction():
 
 
 if __name__ == "__main__":
-    application.run(host="0.0.0.0", debug=True)
+    application.run(host="0.0.0.0")
