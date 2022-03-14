@@ -39,8 +39,9 @@ ARG_PARSE.add_argument(
 
 args = ARG_PARSE.parse_args()
 
-# camera = cv2.VideoCapture(0)
-camera = VideoStream("http://172.20.10.11:8080/video").start()
+camera = cv2.VideoCapture(0)
+#  Commenting below line for now
+# camera = VideoStream("http://172.20.10.11:8080/video").start()
 
 # Loading Caffe Model
 print('[Status] Loading Model...')
@@ -87,8 +88,8 @@ def generate_frame():
 
     # Loop Video Stream
     while True:
-        # success, frame = camera.read()  # Read camera frame continuosly
-        frame = camera.read()
+        success, frame = camera.read()  # Read camera frame continuosly
+        # frame = camera.read()
         
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
@@ -127,15 +128,17 @@ def generate_frame():
 
 @application.before_first_request
 def OnceAndOnlyOnce():
-    global selectedMode, selectedDirection
+    global selectedMode, selectedDirection, startX, endX
     selectedMode = "Tracking Mode"
     selectedDirection = "Stop"
+    startX = 50
+    endX = 350
 
 
 @application.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "POST":
-        global selectedMode, selectedDirection
+        global selectedMode, selectedDirection, startX, endX
 
         modeVal = request.json.get("mode")
         selectedDirection = request.json.get("direction")
@@ -157,7 +160,7 @@ def video():
 @application.route('/move')
 def direction():
     startX, startY, endX, endY = latest_prediction["Box"].astype("int")
-
+    print(f"StartX: {startX} \tEndX: {endX}")
     if selectedMode == "Free Scanning Mode":
         return jsonify({"Mode": selectedMode, "Direction": selectedDirection})
     else:
@@ -169,7 +172,7 @@ def direction():
             direction = "right"
         else:
             direction = ""
-        return jsonify({"Mode": selectedMode, "Direction": direction})
+        return jsonify({"Mode": selectedMode, "Direction": direction, "StartX":int(startX), "StartY":int(startY)})
 
 
 if __name__ == "__main__":
