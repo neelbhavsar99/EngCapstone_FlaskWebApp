@@ -39,9 +39,9 @@ ARG_PARSE.add_argument(
 
 args = ARG_PARSE.parse_args()
 
-camera = cv2.VideoCapture(0)
-#  Commenting below line for now
-# camera = VideoStream("http://172.20.10.11:8080/video").start()
+#camera = cv2.VideoCapture(0)
+#  Uncomment line below to use phone camera 
+camera = VideoStream("http://10.0.0.117:8080/video").start()
 
 # Loading Caffe Model
 print('[Status] Loading Model...')
@@ -88,8 +88,9 @@ def generate_frame():
 
     # Loop Video Stream
     while True:
-        success, frame = camera.read()  # Read camera frame continuosly
-        # frame = camera.read()
+        #success, frame = camera.read()  # Read camera frame continuosly
+        #Uncomment line below to use phone camera 
+        frame = camera.read()
         
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
@@ -172,7 +173,7 @@ def direction():
             direction = "right"
         else:
             direction = ""
-        return jsonify({"Mode": selectedMode, "Direction": direction, "StartX":int(startX), "StartY":int(startY)})
+        return jsonify({"Mode": selectedMode, "Direction": direction, "StartX": str(startX), "EndX": str(startY) })
 
 
 if __name__ == "__main__":
