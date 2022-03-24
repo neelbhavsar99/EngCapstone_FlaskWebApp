@@ -24,7 +24,7 @@ document.getElementById('buttonboxbackright').addEventListener("click", function
     })
 });
 
-document.getElementById('buttonboxbackstop').addEventListener("click", function leftButton() {
+document.getElementById('buttonboxbackstop').addEventListener("click", function stopButton() {
     fetch("", {
         method: "POST",
         headers: {
@@ -33,6 +33,32 @@ document.getElementById('buttonboxbackstop').addEventListener("click", function 
         },
         body: JSON.stringify({
             direction: "stop"
+        })
+    })
+});
+
+document.getElementById('startRecording').addEventListener("click", function startRecordingButton() {
+    fetch("", {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            startRecording: true
+        })
+    })
+});
+
+document.getElementById('stopRecording').addEventListener("click", function stopRecordingButton() {
+    fetch("", {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            saveRecording: true
         })
     })
 });

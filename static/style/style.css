@@ -1185,6 +1185,91 @@ html {
 
 }
 
+/* Record Button */
+
+#startRecording {
+	cursor: pointer;
+	display: inline-block;
+	width: 150px;
+	height: 40px;
+	background-color: darkblue;
+	border-radius: 5px;
+	margin: auto
+}
+
+#startRecording:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: -17px;
+	border-style: solid;
+	/*border-width: 20px 0px 20px 20px;
+    border-color: transparent transparent transparent transparent;*/
+}
+
+#startRecording>a {
+	text-decoration: none;
+	text-align: center;
+	color: #fff;
+	font: bold 18px/40px Sans-Serif;
+}
+
+#startRecording:hover {
+	background-color: lightblue;
+}
+
+#startRecording:hover:before {
+	border-left-color: lightblue;
+}
+
+#startRecording .center {
+	margin: auto;
+	width: 50%;
+
+}
+
+/* StopRecording Button */
+
+#stopRecording {
+	cursor: pointer;
+	display: inline-block;
+	width: 150px;
+	height: 40px;
+	background-color: darkblue;
+	border-radius: 5px;
+	margin: auto
+}
+
+#stopRecording:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: -17px;
+	border-style: solid;
+	/*border-width: 20px 0px 20px 20px;
+    border-color: transparent transparent transparent transparent;*/
+}
+
+#stopRecording>a {
+	text-decoration: none;
+	text-align: center;
+	color: #fff;
+	font: bold 18px/40px Sans-Serif;
+}
+
+#stopRecording:hover {
+	background-color: lightblue;
+}
+
+#stopRecording:hover:before {
+	border-left-color: lightblue;
+}
+
+#stopRecording .center {
+	margin: auto;
+	width: 50%;
+
+}
 /* Go to camera */
 
 #button-header {
@@ -1252,7 +1337,7 @@ html {
 }
 
 .carousel-background {
-	background-image: url("../images/1.jpeg");
+	/*background-image: url("../images/1.jpeg");*/
 }
 
 .checkbox {

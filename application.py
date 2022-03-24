@@ -39,9 +39,8 @@ ARG_PARSE.add_argument(
 
 args = ARG_PARSE.parse_args()
 
-#camera = cv2.VideoCapture(0)
-#  Uncomment line below to use phone camera 
-camera = VideoStream("http://10.0.0.117:8080/video").start()
+camera = cv2.VideoCapture(0)
+# camera = VideoStream("http://10.0.0.117:8080/video").start() # Uncomment line  to use phone camera
 
 # Loading Caffe Model
 print('[Status] Loading Model...')
@@ -49,13 +48,26 @@ nn = cv2.dnn.readNetFromCaffe(args.prototxt, args.model)
 
 latest_prediction = None
 
+# grab the width, height, and fps of the frames in the video stream.
+frameWidth = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+frameHeight = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+streamFps = int(camera.get(cv2.CAP_PROP_FPS))
+print(f"FPS: {streamFps}, frameWidth: {frameWidth}, frameHeight: {frameHeight}")
+
+# ISSUE HERE TO OVERWRITE PREVIOUS RECORDING restart to record second video
+# initialize the FourCC and a video writer object
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+# Actual fps count is much lower, must check and fix!
+output = cv2.VideoWriter('output.avi', fourcc, streamFps/3,
+                         (frameWidth, frameHeight))
+
 
 def get_predictions(frame):
     predictions = []
 
     # Converting Frame to Blob
-    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 0.007843,
-                                 (300, 300), 127.5)
+    blob = cv2.dnn.blobFromImage(cv2.resize(
+        frame, (300, 300)), 0.007843, (300, 300), 127.5)
 
     # Passing Blob through network to detect and predict
     nn.setInput(blob)
@@ -81,17 +93,19 @@ def get_predictions(frame):
 
 
 def generate_frame():
-    global latest_prediction
+    global latest_prediction, startRecording, saveRecording
 
     # Initialize Video Stream
     print('[Status] Starting Video Stream...')
 
     # Loop Video Stream
     while True:
-        #success, frame = camera.read()  # Read camera frame continuosly
-        #Uncomment line below to use phone camera 
-        frame = camera.read()
-        
+        # print(f"startRecording: {startRecording}, saveRecording: {saveRecording}")
+        success, frame = camera.read()  # Read camera frame continuosly
+        # frame = camera.read()         # Uncomment line to use phone camera
+        if startRecording:
+            output.write(frame)
+
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
 
@@ -119,28 +133,37 @@ def generate_frame():
                  frame + b'\r\n')
 
         yield frame
-
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
             break
+        if saveRecording == True:
+            output.release()
+            print("Stop Recording...")
+            startRecording = False
+            saveRecording = False
 
+    camera.release()
     cv2.destroyAllWindows()
 
 
 @application.before_first_request
 def OnceAndOnlyOnce():
-    global selectedMode, selectedDirection, startX, endX
+    global selectedMode, selectedDirection, startX, endX, startRecording, saveRecording
     selectedMode = "Tracking Mode"
     selectedDirection = "Stop"
     startX = 50
     endX = 350
+    startRecording = False
+    saveRecording = False
 
 
 @application.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == "POST":
-        global selectedMode, selectedDirection, startX, endX
+        global selectedMode, selectedDirection, startX, endX, startRecording, saveRecording
 
+        startRecording = request.json.get("startRecording")
+        saveRecording = request.json.get("saveRecording")
         modeVal = request.json.get("mode")
         selectedDirection = request.json.get("direction")
 
@@ -160,8 +183,9 @@ def video():
 
 @application.route('/move')
 def direction():
+    global selectedMode, selectedDirection
     startX, startY, endX, endY = latest_prediction["Box"].astype("int")
-    print(f"StartX: {startX} \tEndX: {endX}")
+
     if selectedMode == "Free Scanning Mode":
         return jsonify({"Mode": selectedMode, "Direction": selectedDirection})
     else:
@@ -173,7 +197,7 @@ def direction():
             direction = "right"
         else:
             direction = ""
-        return jsonify({"Mode": selectedMode, "Direction": direction, "StartX": str(startX), "EndX": str(startY) })
+        return jsonify({"Mode": selectedMode, "Direction": direction, "StartX": str(startX), "EndX": str(endX)})
 
 
 if __name__ == "__main__":
