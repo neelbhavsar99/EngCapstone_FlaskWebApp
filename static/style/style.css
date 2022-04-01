@@ -1358,9 +1358,11 @@ button {
 
 .notRec{
 	background-color: darkred;
+	padding-bottom: 10px;
 }
 
 .Rec{
+	padding-bottom:10px;
 	animation-name: pulse;
 	animation-duration: 1.5s;
 	animation-iteration-count: infinite;
