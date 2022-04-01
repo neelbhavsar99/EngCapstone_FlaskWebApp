@@ -1,4 +1,3 @@
-# PYTHON APP: python3 application.py
 from imutils.video import VideoStream
 from flask import Flask, Response, make_response, render_template, request, jsonify
 from constants import LABELS, COLORS
@@ -7,6 +6,8 @@ import imutils
 import argparse
 import numpy as np
 import os
+
+# PYTHON APP: python3 application.py
 
 
 templateDirectory = os.path.abspath('templates')
@@ -100,7 +101,6 @@ def generate_frame():
 
     # Loop Video Stream
     while True:
-        # print(f"startRecording: {startRecording}, saveRecording: {saveRecording}")
         success, frame = camera.read()  # Read camera frame continuosly
         # frame = camera.read()         # Uncomment line to use phone camera
         if startRecording:

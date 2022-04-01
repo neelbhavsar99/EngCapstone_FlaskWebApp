@@ -48,6 +48,8 @@ document.getElementById('startRecording').addEventListener("click", function sta
             startRecording: true
         })
     })
+    $('#recButton').removeClass("notRec");
+    $('#recButton').addClass("Rec");
 });
 
 document.getElementById('stopRecording').addEventListener("click", function stopRecordingButton() {
@@ -61,4 +63,20 @@ document.getElementById('stopRecording').addEventListener("click", function stop
             saveRecording: true
         })
     })
+    $('#recButton').removeClass("Rec");
+    $('#recButton').addClass("notRec");
 });
+
+
+$('#recButton').addClass("notRec");
+
+// $('#recButton').click(function () {
+//     if ($('#recButton').hasClass('notRec')) {
+//         $('#recButton').removeClass("notRec");
+//         $('#recButton').addClass("Rec");
+//     }
+//     else {
+//         $('#recButton').removeClass("Rec");
+//         $('#recButton').addClass("notRec");
+//     }
+// });	
