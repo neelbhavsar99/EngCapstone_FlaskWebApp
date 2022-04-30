@@ -9,7 +9,6 @@ import os
 
 # PYTHON APP: python3 application.py
 
-
 templateDirectory = os.path.abspath('templates')
 staticDirectory = os.path.abspath('static')
 application = Flask(__name__, template_folder=templateDirectory,
@@ -42,7 +41,7 @@ args = ARG_PARSE.parse_args()
 
 # camera = cv2.VideoCapture(0)
 # Uncomment line  to use phone camera
-camera = VideoStream("http://10.0.0.117:8080/video").start()
+camera = VideoStream("http://172.20.10.11:8080/video").start()
 
 # Loading Caffe Model
 print('[Status] Loading Model...')
@@ -51,20 +50,21 @@ nn = cv2.dnn.readNetFromCaffe(args.prototxt, args.model)
 latest_prediction = None
 
 # grab the width, height, and fps of the frames in the video stream.
-frameWidth = int(cv2.CAP_PROP_FRAME_WIDTH)  # Uncomment line for phone camera
-# Uncomment line for use phone camera
-frameHeight = int(cv2.CAP_PROP_FRAME_HEIGHT)
-streamFps = int(cv2.CAP_PROP_FPS)  # Uncomment line for phone camera
+frameWidth = 240  # Uncomment line for phone camera
+
+frameHeight = 480  # Uncomment line for use phone camera
+
+streamFps = 30  # Uncomment line for phone camera
 
 #frameWidth = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
 #frameHeight = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
-# streamFps = int(camera.get(cv2.CAP_PROP_FPS))
+#streamFps = int(camera.get(cv2.CAP_PROP_FPS))
 print(f"FPS: {streamFps}, frameWidth: {frameWidth}, frameHeight: {frameHeight}")
 
 # initialize the FourCC and a video writer object
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-# Actual fps count is much lower, must check and fix!
-output = cv2.VideoWriter('output.avi', fourcc, streamFps/3,
+
+output = cv2.VideoWriter('output.avi', fourcc, int(streamFps/2),
                          (frameWidth, frameHeight))
 
 
@@ -92,8 +92,9 @@ def get_predictions(frame):
             h, w = frame.shape[:2]
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             # Appending to predictions
-            predictions.append(
-                {"ID": idx, "Confidence": confidence * 100, "Box": box.astype("int")})
+            if idx == 15:
+                predictions.append(
+                    {"ID": idx, "Confidence": confidence * 100, "Box": box.astype("int")})
 
     return sorted(predictions, key=lambda i: i['Confidence'])
 
@@ -107,13 +108,14 @@ def generate_frame():
     # Loop Video Stream
     while True:
         # success, frame = camera.read()  # Read camera frame continuosly
+        # cv2.imshow('test', frame2)
         frame = camera.read()  # Uncomment line to use phone camera
+
         if startRecording:
             output.write(frame)
 
         # Resize Frame to 400 pixels
         frame = imutils.resize(frame, width=400)
-
         predictions = get_predictions(frame)
 
         if predictions:
